@@ -6,6 +6,7 @@
     <tr>
         <th>in team?</th>
         <th>captain</th>
+        <th>Jersey No</th>
         <th>Name</th>
         <th>Role</th>
         <th>Position</th>
@@ -17,10 +18,13 @@
     @foreach($players as $player)
         <tr>
             <td>
-                <input type="checkbox" class="select-player" data-id="{{ $player->id }}" data-team-id="{{ $team->id }}" {{ $player->player_in_team == '1' ? 'checked' : '' }}/>
+                <input type="checkbox" class="select-player" id="player-{{ $player->id }}" data-id="{{ $player->id }}" data-team-id="{{ $team->id }}" {{ $player->player_in_team == '1' ? 'checked' : '' }}/>
             </td>
             <td>
                 <input type="radio" class="select-captain" name="select-captain" value="{{ $player->id }}" {{ $player->is_captain == '1' ? 'checked' : '' }}/>
+            </td>
+            <td>
+                <input type="number" class="jersey" data-player-id="{{ $player->id }}" value="{{ $player->jersey_no }}"/>
             </td>
             <td>{{ $player->name }}</td>
             <td>{{ $player->role }}</td>
@@ -36,16 +40,12 @@
 <script>
     $(document).ready(function () {
         let selectedPlayers = [];
+        let captainPlayer = null;
 
-        // Update captainPlayer dynamically when a radio button is selected
-        let captainPlayer = null;  // Initialize as null, will be updated on selection
-
-        // Capture when any captain radio button is selected
         $('input[name="select-captain"]').on('change', function () {
-            captainPlayer = $(this).val();  // Update the captain player id
+            captainPlayer = $(this).val();
         });
 
-        // Handle player selection
         $('.select-player').on('change', function(){
             if($(this).prop('checked') === true) {
                 selectedPlayers.push($(this).data('id'));
@@ -62,6 +62,20 @@
 
         // Handle the submit button click
         $('.btn-submit').on('click', function () {
+            let jerseyInput = $('.jersey');
+            let playerJerseyNos = [];
+
+            jerseyInput.each(function (k, v) {
+                let id = $(v).data('player-id'),
+                    checkBox = $('#player-' + id),
+                    value = $(v).val();
+
+                if (checkBox.prop('checked') === true && id !== 0 && value !== null)
+                {
+                    playerJerseyNos[id] = value;
+                }
+            })
+
             // Check if any player is selected
             if(selectedPlayers.length < 1) {
                 alert('Please select at least one player.');
@@ -82,7 +96,8 @@
                 'data': {
                     '_token': '{{ csrf_token() }}',
                     'captainPlayer': captainPlayer,
-                    'selectedPlayers': selectedPlayers
+                    'selectedPlayers': selectedPlayers,
+                    'playerJersey': playerJerseyNos
                 },
                 'success': function (res) {
                     console.log(res);

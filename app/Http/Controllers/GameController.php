@@ -15,7 +15,8 @@ class GameController extends Controller
      */
     public function index()
     {
-        return view('games.index');
+        $games = Game::all();
+        return view('games.index', compact('games'));
     }
 
     /**
@@ -35,6 +36,7 @@ class GameController extends Controller
     public function store(StoreGameRequest $request)
     {
         Game::create([
+            'name' => $request->name,
             'date_time' => $request->date_time,
             'venue' => $request->venue,
             'weather' => $request->weather,
@@ -54,7 +56,14 @@ class GameController extends Controller
      */
     public function show(Game $game)
     {
-        //
+//        $game->load('teamA', 'teamB');
+
+        $data = $game->toArray();
+
+        $data['team_a_image'] = $game->teamA->logo ?? null;
+        $data['team_b_image'] = $game->teamB->logo ?? null;
+
+        return $data;
     }
 
     /**
@@ -79,5 +88,13 @@ class GameController extends Controller
     public function destroy(Game $game)
     {
         //
+    }
+
+    public function gamePlayingXI(Game $game)
+    {
+        $team_a = $game->teamA()->first()->players()->get();
+        $team_b = $game->teamB()->first()->players()->get();
+
+        return view('games.playingXI', compact('game', 'team_a', 'team_b'));
     }
 }

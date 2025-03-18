@@ -57,7 +57,10 @@ Route::prefix('admin')->group(function () {
             'index' => 'games.index',
             'create' => 'games.create',
             'store' => 'games.store',
+            'show' => 'games.show',
         ]);
+
+        Route::get('games/{game}/playing-xi', [GameController::class, 'gamePlayingXI'])->name('games.playingXI');
     });
 
 });

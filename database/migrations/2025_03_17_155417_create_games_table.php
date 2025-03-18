@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('games', function (Blueprint $table) {
             $table->id();
+            $table->string('name', 255)->nullable();
             $table->foreignId('team_a_id')->constrained('teams')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('team_a')->nullable();
+            $table->string('team_a_abb')->nullable();
             $table->integer('team_a_score')->default(0);
             $table->foreignId('team_b_id')->constrained('teams')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('team_b')->nullable();
+            $table->string('team_b_abb')->nullable();
             $table->integer('team_b_score')->default(0);
             $table->string('venue', 255);
             $table->string('weather', 255);

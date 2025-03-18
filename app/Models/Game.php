@@ -16,5 +16,15 @@ class Game extends Model
 
     protected $dates = ['deleted_at'];
 
-    protected $fillable = ['team_a_id', 'team_a', 'team_a_score', 'team_b_id', 'team_b', 'team_b_score', 'venue', 'weather', 'status', 'date_time', 'winner', 'official', 'referee', 'first_linesmen', 'second_linesmen'];
+    protected $fillable = ['name', 'team_a_id', 'team_a', 'team_a_score', 'team_b_id', 'team_b', 'team_b_score', 'venue', 'weather', 'status', 'date_time', 'winner', 'official', 'referee', 'first_linesmen', 'second_linesmen'];
+
+    public function teamA()
+    {
+        return $this->belongsTo(Team::class, 'team_a_id');
+    }
+
+    public function teamB()
+    {
+        return $this->belongsTo(Team::class, 'team_b_id');
+    }
 }
