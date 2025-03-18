@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TeamController;
@@ -10,8 +11,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-   return view('dashboard');
-});
+    return view('dashboard');
+})->name('dashboard');
 
 Route::prefix('admin')->group(function () {
     Route::resource('players', PlayerController::class)->names(
@@ -51,6 +52,12 @@ Route::prefix('admin')->group(function () {
 
         Route::get('teams/{team}/players', [TeamController::class, 'viewTeamPlayers'])->name('teams.teamPlayers');
         Route::post('teams/{team}/players', [TeamController::class, 'updateTeamPlayers'])->name('teams.teamPlayers.update');
+
+        Route::resource('games', GameController::class)->names([
+            'index' => 'games.index',
+            'create' => 'games.create',
+            'store' => 'games.store',
+        ]);
     });
 
 });
