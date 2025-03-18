@@ -1,0 +1,15 @@
+// @use "../../node_modules/bootstrap/scss/";
+// @use "bootstrap/scss/variables";
+// @use "bootstrap/scss/mixins";
+
+// Now you can write your custom SCSS
+body {
+  background-color: #f8f9fa;
+}
+
+// Import partials
+@import './variables';
+@import './grid';
+@import './normalize';
+@import './common';
+@import './dashboard';
