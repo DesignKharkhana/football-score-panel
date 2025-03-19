@@ -97,11 +97,24 @@ class TeamController extends Controller
 
     public function viewTeamPlayers(Team $team)
     {
-        $players = Player::select('players.*', DB::raw('IF(team_players.player_id IS NOT NULL, 1, 0) as player_in_team'), 'team_players.is_captain')
+        $players = Player::select('players.*',
+            DB::raw('IF(team_players.player_id IS NOT NULL, 1, 0) as player_in_team'),
+            'team_players.is_captain',
+            'team_players.jersey_no')
             ->leftJoin('team_players', function ($join) use ($team) {
                 $join->on('players.id', '=', 'team_players.player_id')
                     ->where('team_players.team_id', '=', $team->id);
-            })->whereNull('deleted_at')->where('status', '1')->orderBy('name', 'ASC')->get();
+            })
+            ->whereNull('players.deleted_at')
+            ->where('players.status', '1')
+            // Ensure the player is only in the current team (no other team association)
+            ->whereNotIn('players.id', function ($query) use ($team) {
+                $query->select('player_id')
+                    ->from('team_players')
+                    ->where('team_id', '!=', $team->id); // Player is in some other team
+            })
+            ->orderBy('players.name', 'ASC')
+            ->get();;
 
         return view('teams.teamPlayer', compact('team', 'players'));
     }
@@ -110,6 +123,7 @@ class TeamController extends Controller
     {
         $captainPlayer = $request->get('captainPlayer');
         $selectedPlayers = $request->get('selectedPlayers');
+        $playerJerseyNos = $request->get('playerJersey');
 
         $team->players()->sync($selectedPlayers);
 
@@ -120,6 +134,12 @@ class TeamController extends Controller
                 if ($playerId !== $captainPlayer) {
                     $team->players()->updateExistingPivot($playerId, ['is_captain' => '0']);
                 }
+            }
+        }
+
+        foreach ($playerJerseyNos as $playerId => $jerseyNumber) {
+            if (!empty($jerseyNumber) && $playerId != 0) {
+                $team->players()->updateExistingPivot($playerId, ['jersey_no' => $jerseyNumber]);
             }
         }
 

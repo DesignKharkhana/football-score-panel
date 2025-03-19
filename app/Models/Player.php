@@ -20,6 +20,6 @@ class Player extends Model
 
     public function teams()
     {
-        return $this->belongsToMany(Team::class, 'team_players');
+        return $this->belongsToMany(Team::class)->withPivot('jersey_no', 'is_captain');
     }
 }

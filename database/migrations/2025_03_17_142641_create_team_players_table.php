@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('team_id')->constrained('teams')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('player_id')->constrained('players')->onDelete('cascade')->onUpdate('cascade');
             $table->enum('is_captain', ['0', '1'])->default('0');
+            $table->integer('jersey_no')->default('0');
             $table->timestamps();
         });
     }
