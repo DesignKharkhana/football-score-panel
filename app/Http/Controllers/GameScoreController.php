@@ -51,7 +51,7 @@ class GameScoreController extends Controller
             }
         }
 
-        $gameScore = GameScore::create([
+        GameScore::create([
             'game_id'     => $game->id,
             'team_id'     => $team->id,
             'scored_by'   => $scorer->id,

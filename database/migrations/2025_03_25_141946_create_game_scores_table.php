@@ -22,6 +22,7 @@ return new class extends Migration
             $table->enum('is_penalty', ['0', '1'])->default('0');
             $table->enum('is_own_goal', ['0', '1'])->default('0');
             $table->string('scored_at')->default('00:00:00');
+            $table->string('card_issued_time')->default('00:00:00');
             $table->timestamps();
         });
     }
