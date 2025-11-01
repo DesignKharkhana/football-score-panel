@@ -108,7 +108,7 @@
             <form method="POST" action="{{ route('admin.games.team.score', ['game' => $game, 'team' => $game->teamB]) }}">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title" id="teamAModalLabel">Team A Score</h5>
+                    <h5 class="modal-title" id="teamAModalLabel">Team B Score</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -215,10 +215,10 @@
 <div class="modal fade" id="teamBFoulModal" tabindex="-1" role="dialog" aria-labelledby="teamBFoulModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form method="POST" action="{{ route('admin.games.team.score', ['game' => $game, 'team' => $game->teamB]) }}">
+            <form method="POST" action="{{ route('admin.games.team.cardLog', ['game' => $game, 'team' => $game->teamB]) }}">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title" id="teamAModalLabel">Team A Score</h5>
+                    <h5 class="modal-title" id="teamAFoulModalLabel">Team B Foul Log</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -227,43 +227,25 @@
                 <div class="modal-body">
                     <!-- Form for Team A Score -->
                     <div class="form-group">
-                        <label for="scoredByB">Scored By</label>
-                        <select class="form-control" id="scoredBy" name="scored_by">
-                            <option value="">-- Select Scorer --</option>
+                        <label for="cardIssuePlayer">Foul By</label>
+                        <select class="form-control" id="cardIssuePlayer" name="card_issued_player">
+                            <option value="">-- Select Player --</option>
                             @foreach($game->teamB->players as $player)
                                 <option value="{{ $player->id }}">{{ $player->name }} ({{ $player->pivot->jersey_no }})</option>
                             @endforeach
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="assistByB">Assist By</label>
-                        <select class="form-control" id="assistBy" name="assist_by">
-                            <option value="">-- Select Assist By --</option>
-                            @foreach($game->teamB->players as $player)
-                                <option value="{{ $player->id }}">{{ $player->name }}({{ $player->pivot->jersey_no }})</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="scoredTimeA">Scored Time</label>
-                        <input type="text" class="form-control" id="scoredTimeA" name="scored_time" placeholder="Enter time (e.g., 45')">
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="is_penalty" id="isPenalty">
-                        <label class="form-check-label" for="isPenalty">Is Penalty</label>
+                        <input class="form-check-input" type="checkbox" name="is_yellow_card" id="is_yellow_card">
+                        <label class="form-check-label" for="is_yellow_card">Is Yellow Card</label>
                     </div>
                     <div class="form-group form-check">
-                        <input class="form-check-input" type="checkbox" name="is_own_goal" id="isOwnGoal">
-                        <label class="form-check-label" for="isOwnGoal">Is Own Goal</label>
+                        <input class="form-check-input" type="checkbox" name="is_red_card" id="is_red_card">
+                        <label class="form-check-label" for="is_red_card">Is Red card</label>
                     </div>
                     <div class="form-group">
-                        <label for="ownGoal">Own Goal By</label>
-                        <select class="form-control" id="scoredBy" name="own_goal">
-                            <option value="">-- Select Scorer --</option>
-                            @foreach($game->teamA->players as $player)
-                                <option value="{{ $player->id }}">{{ $player->name }} ({{ $player->pivot->jersey_no }})</option>
-                            @endforeach
-                        </select>
+                        <label for="scoredTimeA">Fouled At</label>
+                        <input type="text" class="form-control" id="cardIssuedTime" name="fouled_at" placeholder="Enter time (e.g., 45')">
                     </div>
                 </div>
                 <div class="modal-footer">
